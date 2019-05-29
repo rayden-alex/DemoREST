@@ -30,4 +30,6 @@ public interface EmployeeService {
      * @return DTO for saved Employee
      */
     EmployeeDto save(EmployeeDto employeeDto);
+
+    EmployeeDto update(Long id, EmployeeDto employeeDto);
 }

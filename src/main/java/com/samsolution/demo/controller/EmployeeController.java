@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,15 +37,21 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public List<EmployeeDto> getAllBooks() {
+    public List<EmployeeDto> getAllEmployees() {
         List<EmployeeDto> allEmployees = employeeService.findAllEmployees();
         return allEmployees;
     }
 
     @PostMapping(value = {"/create"})
-    public ResponseEntity<?> create(@RequestBody @Valid EmployeeDto employeeDto) {
+    public ResponseEntity<?> createEmployee(@RequestBody @Valid EmployeeDto employeeDto) {
         EmployeeDto savedEmployee = employeeService.save(employeeDto);
         return new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);
+    }
+
+    @PutMapping(value = {"/{id}"})
+    public EmployeeDto updateEmployee(@PathVariable Long id, @RequestBody @Valid EmployeeDto employeeDto) {
+        EmployeeDto savedEmployee = employeeService.update(id, employeeDto);
+        return savedEmployee;
     }
 
 }

@@ -2,6 +2,7 @@ package com.samsolution.demo.validation;
 
 import com.samsolution.demo.validation.exception.BaseValidationException;
 import com.samsolution.demo.validation.exception.BirthdayValidationException;
+import com.samsolution.demo.validation.exception.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,22 @@ import java.time.LocalDateTime;
 @ControllerAdvice//(basePackageClasses = EmployeeController.class)
 @Slf4j
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    @ResponseBody
+    public <T extends EntityNotFoundException> ResponseEntity<?> handleEntityNotFoundException(T ex, WebRequest request) {
+        log.error(ex.getMessage(), ex);
+
+        ErrorDetails errorDetails = ErrorDetails.builder()
+                .timestamp(LocalDateTime.now())
+                .exceptionMessage(ex.getMessage())
+                .details(request.getDescription(false))
+                .customMessage("Entity Not Found")
+                .errorCode(ex.getErrorCode())
+                .build();
+
+        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+    }
 
     @ExceptionHandler(BirthdayValidationException.class)
     @ResponseBody

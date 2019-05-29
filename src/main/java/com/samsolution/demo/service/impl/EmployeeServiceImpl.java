@@ -5,6 +5,7 @@ import com.samsolution.demo.entity.Employee;
 import com.samsolution.demo.jpa.EmployeeRepository;
 import com.samsolution.demo.service.EmployeeService;
 import com.samsolution.demo.validation.exception.BirthdayValidationException;
+import com.samsolution.demo.validation.exception.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -80,6 +82,20 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
 
         Employee employee = fromDtoConverter.convert(employeeDto);
+        Employee savedEmployee = dao.save(employee);
+
+        return toDtoConverter.convert(savedEmployee);
+    }
+
+    @Override
+    public EmployeeDto update(Long id, EmployeeDto employeeDto) {
+        Employee employee = Optional.ofNullable(id)
+                .flatMap(empId -> dao.findById(empId))
+                .orElseThrow(() -> new EntityNotFoundException(employeeDto.toString()));
+
+        employee.setFirstName(employeeDto.getFirstName());
+        employee.setLastName(employeeDto.getLastName());
+        employee.setBirthday(employeeDto.getBirthday());
         Employee savedEmployee = dao.save(employee);
 
         return toDtoConverter.convert(savedEmployee);
