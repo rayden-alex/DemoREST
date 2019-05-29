@@ -4,7 +4,6 @@ import com.samsolution.demo.dto.EmployeeDto;
 import com.samsolution.demo.entity.Employee;
 import com.samsolution.demo.jpa.EmployeeRepository;
 import com.samsolution.demo.service.EmployeeService;
-import com.samsolution.demo.validation.exception.BaseValidationException;
 import com.samsolution.demo.validation.exception.BirthdayValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
@@ -77,7 +76,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public EmployeeDto save(EmployeeDto employeeDto) {
         // Some business logic that can throw exception
         if (employeeDto.getBirthday().isAfter(LocalDate.now())){
-            throw new BirthdayValidationException();
+            throw new BirthdayValidationException(employeeDto.toString());
         }
 
         Employee employee = fromDtoConverter.convert(employeeDto);
