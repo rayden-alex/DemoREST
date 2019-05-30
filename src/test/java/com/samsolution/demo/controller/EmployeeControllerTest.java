@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -33,19 +35,29 @@ public class EmployeeControllerTest {
 
     @Test
     public void getAllEmployees() {
+        //given
         final int EMPLOYEES_COUNT = 10;
-
         List<Employee> employeeList = IntStream.rangeClosed(1, EMPLOYEES_COUNT)
                 .mapToObj(this::createEmployee)
                 .collect(Collectors.toList());
 
         when(dao.findAll()).thenReturn(employeeList);
 
-        ResponseEntity<List> responseEntity = restTemplate.getForEntity("/employees", List.class);
+        //when
+        ResponseEntity<List<Employee>> responseList = restTemplate.exchange(
+                "http://localhost:8080/employees/",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<Employee>>() {
+                });
 
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(responseEntity.getBody()).isNotNull();
-        assertThat(responseEntity.getBody().size()).isEqualTo(EMPLOYEES_COUNT);
+        //then
+        assertThat(responseList.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        List<Employee> employees = responseList.getBody();
+        assertThat(employees).isNotNull();
+        assertThat(employees.size()).isEqualTo(EMPLOYEES_COUNT);
+        assertThat(employees).containsAll(employeeList);
     }
 
     private Employee createEmployee(int i) {
