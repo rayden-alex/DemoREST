@@ -9,8 +9,8 @@ import com.samsolution.demo.validation.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -38,11 +38,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         this.fromDtoConverter = fromDtoConverter;
     }
 
-    /**
-     * Find all items in Employee resource
-     *
-     * @return All Employees resource items
-     */
+    @Transactional(readOnly = true)
     @Override
     public List<EmployeeDto> findAllEmployees() {
         List<Employee> employees = dao.findAll();
@@ -54,11 +50,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeDtos;
     }
 
-    /**
-     * Generates demo data for Employee resource
-     * <p/>
-     * For testing ONLY!
-     */
     @Override
     public void fillDemoEmployees() {
         dao.deleteAll();
@@ -68,12 +59,6 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .forEach(employee -> dao.save(employee));
     }
 
-    /**
-     * Save Employee item to DB
-     *
-     * @param employeeDto - DTO from request
-     * @return DTO for saved Employee
-     */
     @Override
     public EmployeeDto save(EmployeeDto employeeDto) {
         // Some business logic that can throw exception
@@ -101,6 +86,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         return toDtoConverter.convert(savedEmployee);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public EmployeeDto findById(Long id) {
 

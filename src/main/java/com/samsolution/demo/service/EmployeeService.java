@@ -31,9 +31,27 @@ public interface EmployeeService {
      */
     EmployeeDto save(EmployeeDto employeeDto);
 
+    /**
+     * Update Employee item to DB
+     *
+     * @param id          - Employee ID for update
+     * @param employeeDto - DTO from request
+     * @return DTO for updated Employee
+     */
     EmployeeDto update(Long id, EmployeeDto employeeDto);
 
+    /**
+     * Find Employee item in DB
+     *
+     * @param id - Employee ID to find
+     * @return DTO for found Employee
+     */
     EmployeeDto findById(Long id);
 
+    /**
+     * Delete Employee item from DB
+     *
+     * @param id - Employee ID to delete
+     */
     void deleteById(Long id);
 }

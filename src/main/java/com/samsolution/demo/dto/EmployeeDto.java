@@ -3,6 +3,7 @@ package com.samsolution.demo.dto;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
@@ -10,11 +11,11 @@ import java.time.LocalDate;
 public class EmployeeDto {
     private Long id;
 
-    @NotNull
+    @NotEmpty
     @Length(min = 3, max = 50)
     private String firstName;
 
-    @NotNull
+    @NotEmpty
     @Length(min = 3, max = 50)
     private String lastName;
 

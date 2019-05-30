@@ -19,6 +19,15 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.List;
 
+
+/**
+ * REST Controller for Employee resource
+ * <p/>
+ * '@Timed' annotation enables metric collecting<br/>
+ * By default, metrics are generated with the name, http.server.requests.<br/>
+ * The name can be customized by setting the management.metrics.web.server.requests-metric-name property.
+ *
+ */
 @RestController
 @Timed(description="EmployeeController request metrics")
 @RequestMapping("/employees")
