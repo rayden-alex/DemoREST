@@ -2,7 +2,7 @@ package com.samsolution.demo.validation;
 
 import com.samsolution.demo.validation.exception.BaseValidationException;
 import com.samsolution.demo.validation.exception.BirthdayValidationException;
-import com.samsolution.demo.validation.exception.EntityNotFoundException;
+import com.samsolution.demo.validation.exception.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -20,16 +20,16 @@ import java.time.LocalDateTime;
 @Slf4j
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(EntityNotFoundException.class)
+    @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseBody
-    public <T extends EntityNotFoundException> ResponseEntity<?> handleEntityNotFoundException(T ex, WebRequest request) {
+    public <T extends ResourceNotFoundException> ResponseEntity<?> handleResourceNotFoundException(T ex, WebRequest request) {
         log.error(ex.getMessage(), ex);
 
         ErrorDetails errorDetails = ErrorDetails.builder()
                 .timestamp(LocalDateTime.now())
                 .exceptionMessage(ex.getMessage())
                 .details(request.getDescription(false))
-                .customMessage("Entity Not Found")
+                .customMessage("Resource Not Found")
                 .errorCode(ex.getErrorCode())
                 .build();
 
@@ -76,7 +76,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .timestamp(LocalDateTime.now())
                 .exceptionMessage(ex.getMessage())
                 .details(request.getDescription(false))
-                .customMessage("Invalid request param")
+                .customMessage("Unexpected Error")
                 .build();
 
         return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -95,12 +95,4 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         return new ResponseEntity<>(errorDetails, status);
     }
-
-    //    private HttpStatus getStatus(HttpServletRequest request) {
-//        Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
-//        if (statusCode == null) {
-//            return HttpStatus.INTERNAL_SERVER_ERROR;
-//        }
-//        return HttpStatus.valueOf(statusCode);
-//    }
 }

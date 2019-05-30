@@ -2,9 +2,11 @@ package com.samsolution.demo.controller;
 
 import com.samsolution.demo.dto.EmployeeDto;
 import com.samsolution.demo.service.impl.EmployeeServiceImpl;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,32 +28,39 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
-    /**
-     * Generates demo data for Employee resource
-     * <p/>
-     * For testing ONLY
-     */
-    @GetMapping("/fillEmployees")
-    public void fillDemoEmployees() {
-        employeeService.fillDemoEmployees();
-    }
-
     @GetMapping
+    @ApiOperation(value = "Returns a list of all available employees")
     public List<EmployeeDto> getAllEmployees() {
         List<EmployeeDto> allEmployees = employeeService.findAllEmployees();
         return allEmployees;
     }
 
-    @PostMapping(value = {"/create"})
+    @GetMapping("/{id}")
+    @ApiOperation(value = "Returns employee by ID")
+    public EmployeeDto getEmployeeById(@PathVariable("id") Long id) {
+        EmployeeDto employee = employeeService.findById(id);
+        return employee;
+    }
+
+    @PostMapping()
+    @ApiOperation(value = "Creates new employee")
     public ResponseEntity<?> createEmployee(@RequestBody @Valid EmployeeDto employeeDto) {
         EmployeeDto savedEmployee = employeeService.save(employeeDto);
         return new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);
     }
 
-    @PutMapping(value = {"/{id}"})
+    @PutMapping("/{id}")
+    @ApiOperation(value = "Full update of existing employee")
     public EmployeeDto updateEmployee(@PathVariable Long id, @RequestBody @Valid EmployeeDto employeeDto) {
         EmployeeDto savedEmployee = employeeService.update(id, employeeDto);
         return savedEmployee;
+    }
+
+    @DeleteMapping("/{id}")
+    @ApiOperation(value = "Deletes of existing employee")
+    public ResponseEntity<?> deleteEmployee(@PathVariable("id") Long id) {
+        employeeService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

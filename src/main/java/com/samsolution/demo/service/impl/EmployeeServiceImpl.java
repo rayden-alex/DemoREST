@@ -5,7 +5,7 @@ import com.samsolution.demo.entity.Employee;
 import com.samsolution.demo.jpa.EmployeeRepository;
 import com.samsolution.demo.service.EmployeeService;
 import com.samsolution.demo.validation.exception.BirthdayValidationException;
-import com.samsolution.demo.validation.exception.EntityNotFoundException;
+import com.samsolution.demo.validation.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Service;
@@ -91,7 +91,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public EmployeeDto update(Long id, EmployeeDto employeeDto) {
         Employee employee = Optional.ofNullable(id)
                 .flatMap(empId -> dao.findById(empId))
-                .orElseThrow(() -> new EntityNotFoundException(employeeDto.toString()));
+                .orElseThrow(() -> new ResourceNotFoundException(employeeDto.toString()));
 
         employee.setFirstName(employeeDto.getFirstName());
         employee.setLastName(employeeDto.getLastName());
@@ -99,6 +99,24 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee savedEmployee = dao.save(employee);
 
         return toDtoConverter.convert(savedEmployee);
+    }
+
+    @Override
+    public EmployeeDto findById(Long id) {
+
+        EmployeeDto employeeDto = dao.findById(id)
+                .map(emp -> toDtoConverter.convert(emp))
+                .orElseThrow(() -> new ResourceNotFoundException("employee id=" + id));
+
+        return employeeDto;
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        Employee employee = dao.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("employee id=" + id));
+
+        dao.delete(employee);
     }
 
     private Employee createEmployee(int i) {

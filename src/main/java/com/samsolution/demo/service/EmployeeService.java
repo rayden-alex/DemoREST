@@ -32,4 +32,8 @@ public interface EmployeeService {
     EmployeeDto save(EmployeeDto employeeDto);
 
     EmployeeDto update(Long id, EmployeeDto employeeDto);
+
+    EmployeeDto findById(Long id);
+
+    void deleteById(Long id);
 }
