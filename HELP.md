@@ -1,5 +1,12 @@
 # Getting Started
 
+To run application use command:
+
+**_gradlew bootRun_** 
+
+
+### Links
+
 * [Swagger](http://localhost:8080/rest/swagger-ui.html)
 * [Swagger API Doc](http://localhost:8080/rest/v2/api-docs)
 
