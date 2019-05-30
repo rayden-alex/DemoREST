@@ -45,7 +45,7 @@ public class EmployeeControllerTest {
 
         //when
         ResponseEntity<List<Employee>> responseList = restTemplate.exchange(
-                "http://localhost:8080/employees/",
+                "/employees",
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<List<Employee>>() {
