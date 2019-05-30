@@ -2,6 +2,7 @@ package com.samsolution.demo.controller;
 
 import com.samsolution.demo.dto.EmployeeDto;
 import com.samsolution.demo.service.impl.EmployeeServiceImpl;
+import io.micrometer.core.annotation.Timed;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@Timed(description="EmployeeController request metrics")
 @RequestMapping("/employees")
 public class EmployeeController {
     private EmployeeServiceImpl employeeService;
