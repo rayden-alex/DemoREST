@@ -1,6 +1,5 @@
 package com.samsolution.demo.entity;
 
-import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedBy;
@@ -22,7 +21,6 @@ import java.time.LocalDateTime;
 @Table(name = "BOOK")
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@ApiModel(description = "Details about the Employee model")
 @Data
 @NoArgsConstructor
 public class Employee {
