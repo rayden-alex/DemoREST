@@ -2,6 +2,8 @@ package com.samsolution.demo.controller;
 
 import com.samsolution.demo.entity.Employee;
 import com.samsolution.demo.service.EmployeeService;
+import com.samsolution.demo.validation.ErrorCode;
+import com.samsolution.demo.validation.ErrorDetails;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,6 +30,7 @@ public class EmployeeControllerTest {
     @Autowired
     private EmployeeService service;
 
+    private final String RESOURSE_URL = "/employees";
     private final int EXPECTED_EMPLOYEES_COUNT = 11;
 
     @Before
@@ -38,8 +41,9 @@ public class EmployeeControllerTest {
     @Test
     public void getAllEmployees() {
         //when
+
         ResponseEntity<List<Employee>> responseList = restTemplate.exchange(
-                "/employees",
+                RESOURSE_URL,
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<List<Employee>>() {
@@ -56,12 +60,18 @@ public class EmployeeControllerTest {
     @Test
     public void getEmployeeById() {
         //when
-        ResponseEntity<String> response = restTemplate.exchange(
-                "/employee/99",
+        ResponseEntity<ErrorDetails> response = restTemplate.exchange(
+                RESOURSE_URL + "/99",
                 HttpMethod.GET,
                 null,
-                String.class);
+                ErrorDetails.class);
+
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+
+        ErrorDetails errorDetails = response.getBody();
+        assertThat(errorDetails).isNotNull();
+        assertThat(errorDetails.getErrorCode()).isEqualTo(ErrorCode.RESOURCE_NOT_FOUND);
+
     }
 }
