@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -22,7 +23,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseBody
-    public <T extends ResourceNotFoundException> ResponseEntity<?> handleResourceNotFoundException(T ex, WebRequest request) {
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public <T extends ResourceNotFoundException> ErrorDetails handleResourceNotFoundException(T ex, WebRequest request) {
         log.error(ex.getMessage(), ex);
 
         ErrorDetails errorDetails = ErrorDetails.builder()
@@ -33,7 +35,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .errorCode(ex.getErrorCode())
                 .build();
 
-        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+        return errorDetails;
     }
 
     @ExceptionHandler(BirthdayValidationException.class)
