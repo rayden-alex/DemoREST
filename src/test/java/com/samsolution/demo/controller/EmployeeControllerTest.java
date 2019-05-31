@@ -1,7 +1,6 @@
 package com.samsolution.demo.controller;
 
 import com.samsolution.demo.entity.Employee;
-import com.samsolution.demo.jpa.EmployeeRepository;
 import com.samsolution.demo.service.EmployeeService;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,16 +26,12 @@ public class EmployeeControllerTest {
     private TestRestTemplate restTemplate;
 
     @Autowired
-    private EmployeeRepository dao;
-
-    @Autowired
     private EmployeeService service;
 
     private final int EXPECTED_EMPLOYEES_COUNT = 11;
 
     @Before
     public void setUp() {
-        dao.deleteAllInBatch();
         service.fillDemoEmployees(EXPECTED_EMPLOYEES_COUNT);
     }
 
