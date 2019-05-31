@@ -18,7 +18,7 @@ import javax.persistence.Table;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Table(name = "BOOK")
+@Table(name = "EMPLOYEE")
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Data

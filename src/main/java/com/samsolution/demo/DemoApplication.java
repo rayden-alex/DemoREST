@@ -22,6 +22,6 @@ public class DemoApplication {
 
     @EventListener(ApplicationReadyEvent.class)
     public void afterStartup() {
-        employeeService.fillDemoEmployees();
+        employeeService.fillDemoEmployees(10);
     }
 }

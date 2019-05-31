@@ -51,10 +51,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public void fillDemoEmployees() {
+    public void fillDemoEmployees(int count) {
         dao.deleteAll();
 
-        IntStream.rangeClosed(1, 10)
+        IntStream.rangeClosed(1, count)
                 .mapToObj(this::createEmployee)
                 .forEach(employee -> dao.save(employee));
     }

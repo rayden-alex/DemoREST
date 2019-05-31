@@ -1,6 +1,9 @@
 package com.samsolution.demo.controller;
 
 import com.samsolution.demo.entity.Employee;
+import com.samsolution.demo.jpa.EmployeeRepository;
+import com.samsolution.demo.service.EmployeeService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +26,22 @@ public class EmployeeControllerTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    @Autowired
+    private EmployeeRepository dao;
+
+    @Autowired
+    private EmployeeService service;
+
+    private final int EXPECTED_EMPLOYEES_COUNT = 11;
+
+    @Before
+    public void setUp() {
+        dao.deleteAllInBatch();
+        service.fillDemoEmployees(EXPECTED_EMPLOYEES_COUNT);
+    }
 
     @Test
     public void getAllEmployees() {
-        final int EMPLOYEES_COUNT = 10;
-
         //when
         ResponseEntity<List<Employee>> responseList = restTemplate.exchange(
                 "/employees",
@@ -41,7 +55,7 @@ public class EmployeeControllerTest {
 
         List<Employee> employees = responseList.getBody();
         assertThat(employees).isNotNull();
-        assertThat(employees.size()).isEqualTo(EMPLOYEES_COUNT);
+        assertThat(employees.size()).isEqualTo(EXPECTED_EMPLOYEES_COUNT);
     }
 
     @Test

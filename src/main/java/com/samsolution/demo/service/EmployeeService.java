@@ -19,9 +19,10 @@ public interface EmployeeService {
     /**
      * Generates demo data for Employee resource
      * <p/>
+     * @param count  - count of test Employees
      * For testing ONLY!
      */
-    void fillDemoEmployees();
+    void fillDemoEmployees(int count);
 
     /**
      * Save Employee item to DB
