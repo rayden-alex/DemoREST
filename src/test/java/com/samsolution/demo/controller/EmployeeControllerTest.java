@@ -30,7 +30,7 @@ public class EmployeeControllerTest {
     @Autowired
     private EmployeeService service;
 
-    private final String RESOURSE_URL = "/employees";
+    private final String RESOURCE_URL = "/employees";
     private final int EXPECTED_EMPLOYEES_COUNT = 11;
 
     @Before
@@ -43,7 +43,7 @@ public class EmployeeControllerTest {
         //when
 
         ResponseEntity<List<Employee>> responseList = restTemplate.exchange(
-                RESOURSE_URL,
+                RESOURCE_URL,
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<List<Employee>>() {
@@ -61,7 +61,7 @@ public class EmployeeControllerTest {
     public void getEmployeeById() {
         //when
         ResponseEntity<ErrorDetails> response = restTemplate.exchange(
-                RESOURSE_URL + "/99",
+                RESOURCE_URL + "/99",
                 HttpMethod.GET,
                 null,
                 ErrorDetails.class);
