@@ -14,7 +14,10 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -25,16 +28,25 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class Employee {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "EMPLOYEE_GEN", sequenceName = "EMPLOYEE_SEQ")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EMPLOYEE_GEN")
     @Column(updatable = false)
     private Long id;
 
+    @NotEmpty                              //validation
+    @Size(max = 50)                        //validation
+    @Column(length = 50, nullable = false) //definition
     private String firstName;
+
+    @NotEmpty
+    @Size(max = 50)
+    @Column(length = 50, nullable = false)
     private String lastName;
+
     private LocalDate birthday;
 
     @CreatedBy
-    @Column(updatable = false)
+    @Column(length = 50, updatable = false)
     protected String createdBy;
 
     @CreatedDate
@@ -42,6 +54,7 @@ public class Employee {
     protected LocalDateTime created;
 
     @LastModifiedBy
+    @Column(length = 50)
     protected String lastModifiedBy;
 
     @LastModifiedDate
