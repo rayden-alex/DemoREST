@@ -1,6 +1,7 @@
 package com.samsolution.demo.controller;
 
 import com.samsolution.demo.dto.EmployeeDto;
+import com.samsolution.demo.service.EmployeeService;
 import com.samsolution.demo.service.impl.EmployeeServiceImpl;
 import io.micrometer.core.annotation.Timed;
 import io.swagger.annotations.ApiOperation;
@@ -32,10 +33,10 @@ import java.util.List;
 @Timed(description="EmployeeController request metrics")
 @RequestMapping("/employees")
 public class EmployeeController {
-    private EmployeeServiceImpl employeeService;
+    private EmployeeService employeeService;
 
     @Autowired
-    public EmployeeController(EmployeeServiceImpl employeeService) {
+    public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
     }
 

@@ -54,9 +54,14 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void fillDemoEmployees(int count) {
         dao.deleteAll();
 
-        IntStream.rangeClosed(1, count)
-                .mapToObj(this::createEmployee)
+        generateEmployees(count)
                 .forEach(employee -> dao.save(employee));
+    }
+
+    public static List<Employee> generateEmployees(int count) {
+        return IntStream.rangeClosed(1, count)
+                .mapToObj(EmployeeServiceImpl::createEmployee)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -105,7 +110,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         dao.delete(employee);
     }
 
-    private Employee createEmployee(int i) {
+    private static Employee createEmployee(int i) {
         Employee employee = new Employee();
         employee.setLastName("LastName" + i);
         employee.setFirstName("FirstName" + i);
@@ -116,7 +121,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employee;
     }
 
-    private LocalDate generateRandomDate() {
+    private static LocalDate generateRandomDate() {
         long minDay = LocalDate.of(1970, 1, 1).toEpochDay();
         long maxDay = LocalDate.of(2000, 12, 31).toEpochDay();
         long randomDay = ThreadLocalRandom.current().nextLong(minDay, maxDay);

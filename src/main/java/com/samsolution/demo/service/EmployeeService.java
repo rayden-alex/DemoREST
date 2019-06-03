@@ -1,6 +1,7 @@
 package com.samsolution.demo.service;
 
 import com.samsolution.demo.dto.EmployeeDto;
+import com.samsolution.demo.entity.Employee;
 
 import java.util.List;
 
