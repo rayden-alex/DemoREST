@@ -14,9 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 /**
  * Service for Employee resource
@@ -54,14 +52,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void fillDemoEmployees(int count) {
         dao.deleteAll();
 
-        generateEmployees(count)
-                .forEach(employee -> dao.save(employee));
-    }
-
-    public static List<Employee> generateEmployees(int count) {
-        return IntStream.rangeClosed(1, count)
-                .mapToObj(EmployeeServiceImpl::createEmployee)
-                .collect(Collectors.toList());
+        List<Employee> employees = EmployeeFactoryImpl.getInstance().createList(count);
+        dao.saveAll(employees);
     }
 
     @Override
@@ -110,23 +102,4 @@ public class EmployeeServiceImpl implements EmployeeService {
         dao.delete(employee);
     }
 
-    private static Employee createEmployee(int i) {
-        Employee employee = new Employee();
-        employee.setLastName("LastName" + i);
-        employee.setFirstName("FirstName" + i);
-
-        LocalDate randomDate = generateRandomDate();
-        employee.setBirthday(randomDate);
-
-        return employee;
-    }
-
-    private static LocalDate generateRandomDate() {
-        long minDay = LocalDate.of(1970, 1, 1).toEpochDay();
-        long maxDay = LocalDate.of(2000, 12, 31).toEpochDay();
-        long randomDay = ThreadLocalRandom.current().nextLong(minDay, maxDay);
-
-        LocalDate randomDate = LocalDate.ofEpochDay(randomDay);
-        return randomDate;
-    }
 }
