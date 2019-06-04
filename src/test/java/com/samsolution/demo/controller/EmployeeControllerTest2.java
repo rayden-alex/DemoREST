@@ -111,7 +111,7 @@ public class EmployeeControllerTest2 {
         //when
         when(service.findById(eq(EMPLOYEE_ID))).thenReturn(expectedEmployee);
 
-        MockHttpServletResponse response = mvc.perform(get(RESOURCE_URL + "/" + EMPLOYEE_ID).accept(MediaType.APPLICATION_JSON))
+        MockHttpServletResponse response = mvc.perform(get(RESOURCE_URL + "/{id}", EMPLOYEE_ID).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse();
@@ -136,7 +136,7 @@ public class EmployeeControllerTest2 {
         //when
         when(service.findById(anyLong())).thenThrow(new ResourceNotFoundException("employee id=" + EMPLOYEE_ID));
 
-        MockHttpServletResponse response = mvc.perform(get(RESOURCE_URL + "/" + EMPLOYEE_ID).accept(MediaType.APPLICATION_JSON))
+        MockHttpServletResponse response = mvc.perform(get(RESOURCE_URL + "/{id}", EMPLOYEE_ID).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andReturn()
                 .getResponse();
