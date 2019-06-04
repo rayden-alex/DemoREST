@@ -21,6 +21,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
+// Test with full Spring context, embedded Tomcat and real database
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class EmployeeControllerTest {
 
@@ -41,7 +42,6 @@ public class EmployeeControllerTest {
     @Test
     public void getAllEmployees() {
         //when
-
         ResponseEntity<List<Employee>> responseList = restTemplate.exchange(
                 RESOURCE_URL,
                 HttpMethod.GET,
