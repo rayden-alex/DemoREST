@@ -52,7 +52,9 @@ public class EmployeeControllerTest2 {
     private Converter<Employee, EmployeeDto> toDtoConverter;
 
     // This objects will be magically initialized by the JacksonTester.initFields() method below
+    @SuppressWarnings("unused")
     private JacksonTester<EmployeeDto> testerEmployeeDto;
+    @SuppressWarnings("unused")
     private JacksonTester<List<EmployeeDto>> testerEmployeeDtoList;
 
     private final String RESOURCE_URL = "/employees";
@@ -61,7 +63,7 @@ public class EmployeeControllerTest2 {
     public void setUp() {
         // Initializes the JacksonTester
         // (or @AutoConfigureJsonTesters can be used to autowire JacksonTester instances)
-        // (@JsonTest cannot be applied because it include @BootstrapWith and @WebMvcTest already have it)
+        // (@JsonTest cannot be applied because it includes @BootstrapWith and @WebMvcTest already have it)
         JacksonTester.initFields(this, jsonMapper);
 
         toDtoConverter = new EmployeeToEmployeeDtoConverter();
@@ -90,8 +92,7 @@ public class EmployeeControllerTest2 {
         List<EmployeeDto> employeeDtoList = jsonMapper.readValue(content, new TypeReference<List<EmployeeDto>>() {
         });
 
-        assertThat(employeeDtoList.size()).isEqualTo(expectedEmployeesDtoList.size());
-        assertThat(employeeDtoList).isEqualTo(expectedEmployeesDtoList);
+        assertThat(employeeDtoList).hasSameSizeAs(expectedEmployeesDtoList).isEqualTo(expectedEmployeesDtoList);
 
         // convert json to DTO by "JacksonTester" v1
         assertThat(testerEmployeeDtoList.parse(content)).isEqualTo(expectedEmployeesDtoList);

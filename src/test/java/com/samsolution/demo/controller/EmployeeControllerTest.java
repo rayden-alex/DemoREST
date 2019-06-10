@@ -53,8 +53,7 @@ public class EmployeeControllerTest {
         assertThat(responseList.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         List<Employee> employees = responseList.getBody();
-        assertThat(employees).isNotNull();
-        assertThat(employees.size()).isEqualTo(EXPECTED_EMPLOYEES_COUNT);
+        assertThat(employees).hasSize(EXPECTED_EMPLOYEES_COUNT);
     }
 
     @Test
