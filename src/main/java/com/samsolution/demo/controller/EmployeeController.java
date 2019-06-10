@@ -2,7 +2,6 @@ package com.samsolution.demo.controller;
 
 import com.samsolution.demo.dto.EmployeeDto;
 import com.samsolution.demo.service.EmployeeService;
-import com.samsolution.demo.service.impl.EmployeeServiceImpl;
 import io.micrometer.core.annotation.Timed;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
