@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Service for Employee resource
@@ -46,6 +47,19 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .collect(Collectors.toList());
 
         return employeeDtos;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<EmployeeDto> findAllEmployeesWithStream() {
+        try (Stream<Employee> employeeStream = dao.streamAllBy()) {
+
+            List<EmployeeDto> employeeDtos = employeeStream
+                    .map(employee -> toDtoConverter.convert(employee))
+                    .collect(Collectors.toList());
+
+            return employeeDtos;
+        }
     }
 
     @Override

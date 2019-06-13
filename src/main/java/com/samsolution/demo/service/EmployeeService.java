@@ -1,7 +1,6 @@
 package com.samsolution.demo.service;
 
 import com.samsolution.demo.dto.EmployeeDto;
-import com.samsolution.demo.entity.Employee;
 
 import java.util.List;
 
@@ -16,6 +15,13 @@ public interface EmployeeService {
      * @return All Employees resource items
      */
     List<EmployeeDto> findAllEmployees();
+
+    /**
+     * Find all items in Employee resource
+     *
+     * @return All Employees resource items in stream !!!
+     */
+    List<EmployeeDto> findAllEmployeesWithStream();
 
     /**
      * Generates demo data for Employee resource
