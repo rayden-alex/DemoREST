@@ -25,11 +25,19 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-aop'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    implementation 'org.apache.cxf:cxf-spring-boot-starter-jaxrs:3.3.2'
+    implementation 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider'
+    // implementation 'org.apache.cxf:cxf-rt-rs-service-description-swagger:3.3.2'
+
 
     implementation 'io.springfox:springfox-swagger2:2.9.2'
     implementation 'io.springfox:springfox-swagger-ui:2.9.2'
+
+    // implementation 'org.webjars:swagger:3.+'
+    // implementation 'org.webjars:swagger-ui:3.+'
+    // implementation 'io.springfox:springfox-swagger-ui:2.9.2'
 
     runtimeOnly 'com.h2database:h2'
 

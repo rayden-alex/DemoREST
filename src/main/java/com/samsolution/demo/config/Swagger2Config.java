@@ -16,8 +16,8 @@ public class Swagger2Config {
     public Docket api() {
         Docket docket = new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis((RequestHandlerSelectors.basePackage("com.samsolution.demo.controller")))
-                //.apis(RequestHandlerSelectors.any())
+                //.apis((RequestHandlerSelectors.basePackage("com.samsolution.demo.controller")))
+                .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
                 .build();
 

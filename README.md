@@ -21,6 +21,7 @@ To run application use command:
 * [H2-console](http://localhost:8080/rest/h2-console)  URL=jdbc:h2:mem:testdb
 
 
+* [JAX-RS HelloService resource](http://localhost:8080/rest/cxf/hello/sayHello/8888)
 
 
 ### Reference Documentation
