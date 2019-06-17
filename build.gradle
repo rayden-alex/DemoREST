@@ -1,3 +1,5 @@
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
 plugins {
     id 'org.springframework.boot' version '2.1.5.RELEASE'
     id 'java'
@@ -47,4 +49,40 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    test {
+        // https://docs.gradle.org/current/javadoc/org/gradle/api/tasks/testing/Test.html
+
+        // set a system property for the test JVM(s)
+        // systemProperty 'someProp', 'someValue'
+
+        // Fail the 'test' task on the first test failure
+        failFast = false
+
+        // explicitly include or exclude tests
+        // include 'org/foo/**'
+        // exclude 'org/boo/**'
+
+        // listen to events in the test execution lifecycle
+        // beforeTest { TestDescriptor desc ->
+        //     logger.lifecycle('\n\n\n===================Running test: {}', desc.name)
+        // }
+
+
+        testLogging {
+            showStandardStreams = false // show standard out and standard error of the test JVM(s) on the console
+            events(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
+        }
+
+        afterSuite { TestDescriptor desc, TestResult result ->
+            if (!desc.parent) { // will match the outermost suite
+                logger.lifecycle('\n\n\n===================Test summary: {}\n' +
+                        '{} Tests total:\n' +
+                        '{} Successes, \n' +
+                        '{} Failures, \n' +
+                        '{} Skipped',
+                        result.resultType, result.testCount, result.successfulTestCount, result.failedTestCount, result.skippedTestCount)
+            }
+        }
+    }
 }
