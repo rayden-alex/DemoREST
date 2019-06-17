@@ -2,7 +2,7 @@ package com.samsolution.demo.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.samsolution.demo.converter.EmployeeToEmployeeDtoConverter;
+import com.samsolution.demo.BaseIntegrationTestConfiguration;
 import com.samsolution.demo.dto.EmployeeDto;
 import com.samsolution.demo.entity.Employee;
 import com.samsolution.demo.service.EmployeeService;
@@ -14,9 +14,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.task.TaskExecutionAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.web.servlet.MockMvcSecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -34,21 +38,29 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-// Disable full auto-configuration and instead apply only configuration relevant to MVC tests
-// Not all components available in Spring context, no embedded Tomcat, no real database, web-layer is mocked
-@WebMvcTest(EmployeeController.class)
+// Slice test
+// Disable full auto-configuration and instead apply only configuration relevant to MVC tests.
+// Not all components available in Spring context. No embedded Tomcat, no real database, web-layer is mocked.
+@WebMvcTest(
+        controllers = {EmployeeController.class},
+        excludeAutoConfiguration = {MockMvcSecurityAutoConfiguration.class, TaskExecutionAutoConfiguration.class})
 public class EmployeeControllerTest2 {
 
     @Autowired
     private MockMvc mvc; //tests annotated with @WebMvcTest will also auto-configure Spring Security and MockMvc
 
     @Autowired
-    private ObjectMapper jsonMapper; // Can be Autowired because of @WebMvcTest (it's auto configure JsonComponent, Converter and other MVC components)
+    // Can be Autowired because of @WebMvcTest
+    // (it's auto configure JsonComponent, HttpMessageConverter,
+    // org.springframework.core.convert.converter.Converter and other MVC components)
+    private ObjectMapper jsonMapper;
     //private final ObjectMapper jsonMapper = new ObjectMapper().findAndRegisterModules();
 
     @MockBean
     private EmployeeService service;
 
+    @Autowired
+    // Can be Autowired because @WebMvcTest auto configure org.springframework.core.convert.converter.Converter
     private Converter<Employee, EmployeeDto> toDtoConverter;
 
     // This objects will be magically initialized by the JacksonTester.initFields() method below
@@ -59,6 +71,11 @@ public class EmployeeControllerTest2 {
 
     private final String RESOURCE_URL = "/employees";
 
+    @TestConfiguration
+    @Import({BaseIntegrationTestConfiguration.class})
+    static class TestConfig {
+    }
+
     @Before
     public void setUp() {
         // Initializes the JacksonTester
@@ -66,7 +83,7 @@ public class EmployeeControllerTest2 {
         // (@JsonTest cannot be applied because it includes @BootstrapWith and @WebMvcTest already have it)
         JacksonTester.initFields(this, jsonMapper);
 
-        toDtoConverter = new EmployeeToEmployeeDtoConverter();
+        //toDtoConverter = new EmployeeToEmployeeDtoConverter();
     }
 
     @Test
@@ -79,7 +96,6 @@ public class EmployeeControllerTest2 {
 
         //when
         when(service.findAllEmployees()).thenReturn(expectedEmployeesDtoList);
-
 
         MockHttpServletResponse response = mvc.perform(get(RESOURCE_URL).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

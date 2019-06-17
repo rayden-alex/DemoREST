@@ -1,5 +1,6 @@
 package com.samsolution.demo.controller;
 
+import com.samsolution.demo.BaseIntegrationTestConfiguration;
 import com.samsolution.demo.entity.Employee;
 import com.samsolution.demo.service.EmployeeService;
 import com.samsolution.demo.validation.ErrorCode;
@@ -9,7 +10,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -33,6 +36,11 @@ public class EmployeeControllerTest {
 
     private final String RESOURCE_URL = "/employees";
     private final int EXPECTED_EMPLOYEES_COUNT = 11;
+
+    @TestConfiguration
+    @Import({BaseIntegrationTestConfiguration.class})
+    static class TestConfig {
+    }
 
     @Before
     public void setUp() {

@@ -2,7 +2,6 @@ package com.samsolution.demo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.autoconfigure.AutoConfigurationPackages;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.ApplicationContext;
@@ -10,6 +9,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.EventListener;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @TestConfiguration
 public class BaseIntegrationTestConfiguration {
@@ -19,12 +20,13 @@ public class BaseIntegrationTestConfiguration {
     private static final String APP_PACKAGE = "com.samsolution.demo";
 
     @Bean
-    // Or we can use @EventListener(ApplicationReadyEvent.class)
+    // Or we can use @EventListener(ApplicationReadyEvent.class) and injected ctx
     public CommandLineRunner ctxBeanCountPrinter(ApplicationContext appContext) {
         return args -> {
+            int count = appContext.getBeanDefinitionCount();
+
             System.out.println("================================");
-            System.out.println("appContext.getBeanDefinitionCount() = " + appContext.getBeanDefinitionCount());
-            System.out.println("================================");
+            System.out.println("appContext.getBeanDefinitionCount() = " + count);
         };
     }
 
@@ -32,22 +34,33 @@ public class BaseIntegrationTestConfiguration {
     public void ctxBeanClassPrinter() {
         String[] beanDefinitionNames = ctx.getBeanDefinitionNames();
 
-        Arrays.stream(beanDefinitionNames)
+        List<String> beanClasses = getBeanClassNames(beanDefinitionNames);
+        System.out.println("======BeanClassNames=========");
+        beanClasses.forEach(System.out::println);
+
+        List<String> autoConfigurationClasses = getAutoConfigurationClassNames(beanDefinitionNames);
+        System.out.println("======AutoConfiguration=========");
+        autoConfigurationClasses.forEach(System.out::println);
+
+        System.out.println("================================");
+    }
+
+    private List<String> getAutoConfigurationClassNames(String[] beanDefinitionNames) {
+        List<String> autoConfiguration = Arrays.stream(beanDefinitionNames)
+                .filter(s -> s.contains("AutoConfiguration"))
+                .sorted()
+                .collect(Collectors.toList());
+
+        return autoConfiguration;
+    }
+
+    private List<String> getBeanClassNames(String[] beanDefinitionNames) {
+        List<String> beanClassNames = Arrays.stream(beanDefinitionNames)
                 .map(bd -> "" + ctx.getBean(bd).getClass().getName() + "(" + bd + ")")
                 .filter(s -> s.startsWith(APP_PACKAGE))
                 .sorted()
-                .forEach(System.out::println);
+                .collect(Collectors.toList());
 
-        System.out.println("======AutoConfiguration=========");
-
-        AutoConfigurationPackages.get(ctx)
-                .forEach(System.out::println);
-
-//        Arrays.stream(beanDefinitionNames)
-//                .filter(s -> s.contains("AutoConfiguration"))
-//                .sorted()
-//                .forEach(System.out::println);
-
-        System.out.println("================================");
+        return beanClassNames;
     }
 }

@@ -22,7 +22,8 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
-// slice test
+// Slice test
+// Disable full auto-configuration and instead apply only configuration relevant to JPA tests.
 @DataJpaTest(excludeAutoConfiguration = {JdbcTemplateAutoConfiguration.class, TransactionAutoConfiguration.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class EmployeeServiceImplTest {
@@ -47,7 +48,7 @@ public class EmployeeServiceImplTest {
     @ImportAutoConfiguration(classes = {EmployeeServiceImpl.class, EmployeeToEmployeeDtoConverter.class, EmployeeDtoToEmployeeConverter.class})
 */
     @Import({BaseIntegrationTestConfiguration.class, EmployeeServiceImpl.class, EmployeeToEmployeeDtoConverter.class, EmployeeDtoToEmployeeConverter.class})
-    public static class EmployeeServiceTestConfiguration {
+    static class TestConfig {
     }
 
     @Before
