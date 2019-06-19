@@ -1,0 +1,40 @@
+package com.samsolution.demo.config;
+
+import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
+import org.springframework.aop.interceptor.SimpleAsyncUncaughtExceptionHandler;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.AsyncConfigurer;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+
+import java.util.concurrent.Executor;
+
+@Configuration
+@EnableAsync
+public class AsyncConfig implements AsyncConfigurer {
+
+    @Bean
+    // Spring call "org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor.shutdown()"
+    // as a "destroyMethod" on closing the application context
+    public Executor rabbitExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(4);
+        executor.setMaxPoolSize(4);
+        executor.setQueueCapacity(500);
+        executor.setThreadNamePrefix("rabbitExec-");
+        executor.initialize();
+        return executor;
+    }
+
+//    // Change default AsyncExecutor instance to be used when processing async method invocations.
+//    @Override
+//    public Executor getAsyncExecutor() {
+//        return rabbitExecutor();
+//    }
+
+    @Override
+    public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
+        return new SimpleAsyncUncaughtExceptionHandler();
+    }
+}
