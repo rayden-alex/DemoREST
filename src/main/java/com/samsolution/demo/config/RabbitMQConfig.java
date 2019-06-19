@@ -1,34 +1,24 @@
 package com.samsolution.demo.config;
 
-import com.samsolution.demo.rabbit.MessageReceiver;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
-import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
-import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
-import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
-import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-
-import java.util.concurrent.Executor;
-
-import static org.springframework.amqp.rabbit.connection.PublisherCallbackChannelImpl.factory;
 
 @Configuration
 @EnableRabbit
+// @see org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration
 public class RabbitMQConfig {
-    final static String queueName = "my_message_queue";
+    private final static String queueName = "my_message_queue";
 
-    @Autowired
-    RabbitTemplate rabbitTemplate;
+//    private final RabbitTemplate rabbitTemplate;
+//
+//    public RabbitMQConfig(RabbitTemplate rabbitTemplate) {
+//        this.rabbitTemplate = rabbitTemplate;
+//    }
 
     @Bean
     Queue queue() {
