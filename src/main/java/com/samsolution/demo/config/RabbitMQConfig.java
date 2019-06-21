@@ -1,15 +1,18 @@
 package com.samsolution.demo.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
+import org.springframework.amqp.rabbit.listener.api.RabbitListenerErrorHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableRabbit
+@Slf4j
 // @see org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration
 public class RabbitMQConfig {
     private final static String queueName = "my_message_queue";
@@ -20,6 +23,8 @@ public class RabbitMQConfig {
 //        this.rabbitTemplate = rabbitTemplate;
 //    }
 
+    // If necessary, any org.springframework.amqp.core.Queue that is defined as a bean
+    // is automatically used to declare a corresponding queue on the RabbitMQ instance.
     @Bean
     Queue queue() {
         return new Queue(queueName, true);
@@ -76,5 +81,19 @@ public class RabbitMQConfig {
 //        return new MessageListenerAdapter(receiver, "receiveMsg");
 //    }
 
+
+    // The error handler can either return some result (which is sent as the reply)
+    // or throw the original or a new exception
+    // (which is thrown to the container or returned to the sender, depending on the returnExceptions setting).
+    //
+    // see https://docs.spring.io/spring-amqp/reference/html/#async-annotation-driven
+    @Bean
+    public RabbitListenerErrorHandler errorHandler() {
+        RabbitListenerErrorHandler handler = (amqpMessage, message, exception) -> {
+            log.error("RabbitListenerError - ", exception);
+            throw exception;
+        };
+        return handler;
+    }
 
 }

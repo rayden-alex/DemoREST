@@ -2,6 +2,7 @@ package com.samsolution.demo.rabbit;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
@@ -12,7 +13,7 @@ public class MessageSender {
     private final RabbitTemplate rabbitTemplate;
     private final static String queueName = "my_message_queue";
 
-    public MessageSender(RabbitTemplate rabbitTemplate) {
+    public MessageSender(@Autowired RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
     }
 
