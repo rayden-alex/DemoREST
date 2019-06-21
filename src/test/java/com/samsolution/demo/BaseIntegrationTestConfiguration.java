@@ -17,8 +17,6 @@ public class BaseIntegrationTestConfiguration {
     @Autowired
     private ApplicationContext ctx;
 
-    private static final String APP_PACKAGE = "com.samsolution.demo";
-
     @Bean
     // Or we can use @EventListener(ApplicationReadyEvent.class) and injected ctx
     public CommandLineRunner ctxBeanCountPrinter(ApplicationContext appContext) {
@@ -55,6 +53,8 @@ public class BaseIntegrationTestConfiguration {
     }
 
     private List<String> getBeanClassNames(String[] beanDefinitionNames) {
+        final String APP_PACKAGE = this.getClass().getPackage().getName();
+
         List<String> beanClassNames = Arrays.stream(beanDefinitionNames)
                 .map(bd -> "" + ctx.getBean(bd).getClass().getName() + "(" + bd + ")")
                 .filter(s -> s.startsWith(APP_PACKAGE))
