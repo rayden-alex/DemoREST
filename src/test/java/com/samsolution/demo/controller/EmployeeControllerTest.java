@@ -17,6 +17,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
@@ -26,6 +27,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(SpringRunner.class)
 // Test with full Spring context, embedded Tomcat and real database
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+
+// Without @DirtiesContext "MessageSenderTest2" failed on running "all test"
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class EmployeeControllerTest {
 
     @Autowired

@@ -3,7 +3,6 @@ package com.samsolution.demo.rabbit;
 import com.samsolution.demo.dto.OrderMessageDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.CountDownLatch;
@@ -22,10 +21,10 @@ public class MessageReceiver {
 //                    value = @Queue(value = "my_message_queue", durable = "true"),
 //                    exchange = @Exchange(value = "message_queue_exchange", type = ExchangeTypes.DIRECT), key = "key1")
 //    )
-//   @RabbitListener(queuesToDeclare = @Queue(name = "${my.queue}", durable = "true"))
+//   @RabbitListener(queuesToDeclare = @Queue(name = "${my.rabbitmq.queue}", durable = "true"))
     @RabbitListener(queues = "${my.rabbitmq.queue}")
     public void receiveMsg(@SuppressWarnings("unused") OrderMessageDto message) {
-        log.warn("Message Received: " + message);
+        log.warn("=========Message Received: " + message);
         // countDownLatch.countDown();
     }
 

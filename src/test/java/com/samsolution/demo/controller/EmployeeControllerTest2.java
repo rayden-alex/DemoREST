@@ -39,6 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 // Slice test
+// Test slices exclude @Configuration classes from scanning
 // Disable full auto-configuration and instead apply only configuration relevant to MVC tests.
 // Not all components available in Spring context. No embedded Tomcat, no real database, web-layer is mocked.
 @WebMvcTest(
@@ -71,6 +72,8 @@ public class EmployeeControllerTest2 {
 
     private final String RESOURCE_URL = "/employees";
 
+    // Simple @Configuration classes are excluded from scanning in test ApplicationContext,
+    // so we have to use @TestConfiguration
     @TestConfiguration
     @Import({BaseIntegrationTestConfiguration.class})
     static class TestConfig {

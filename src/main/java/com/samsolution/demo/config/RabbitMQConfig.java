@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 // @see org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration
 public class RabbitMQConfig {
-    public final static String QUEUE_NAME = "my_message_queue";
+    public static final String QUEUE_NAME = "my_message_queue";
     public static final String EXCHANGE_NAME = "message_queue_exchange";
 
 //    private final RabbitTemplate rabbitTemplate;
