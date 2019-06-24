@@ -12,7 +12,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 
-// Without @DirtiesContext "MessageSenderTest2" failed on running "all test"
+// Without @DirtiesContext "MessageSenderTest2" failed on running "all test".
+//
+// Похоже это происходит потому, что бины продолжают "жить" в закешированных
+// тестовых контекстах. И если эти бины имели коннекты к внешним системам
+// не через DispatcherServlet и прочие спринговые плюшки, то эти коннекты тоже будут "живыми".
+// И, соответственно, продолжат обрабатывать запросы через эти коннекты.
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class DemoApplicationTests {
     @Test
@@ -22,12 +27,13 @@ public class DemoApplicationTests {
     /**
      * Stop all ListenerEndpoint in "RabbitListenerEndpointRegistry" takes almost 770 ms.
      * "DirtiesContext" takes much less time!
-     *
+     * <p/>
      * Contrary to MessageListenerContainers created manually, listener containers managed by registry
      * are not beans in the application context and are not candidates for autowiring.
      *
      * @see RabbitBootstrapConfiguration
      * @see RabbitListenerEndpointRegistry
+     * @see <a href="https://stackoverflow.com/questions/41035454/how-to-stop-consuming-messages-with-rabbitlistener">how-to-stop-consuming-messages-with-rabbitlistener</a>
      */
     @After
     public void tearDown() {
