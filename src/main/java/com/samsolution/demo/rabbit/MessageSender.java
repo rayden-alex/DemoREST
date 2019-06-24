@@ -1,8 +1,11 @@
 package com.samsolution.demo.rabbit;
 
+import com.samsolution.demo.dto.OrderMessageDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
@@ -32,7 +35,8 @@ public class MessageSender {
 
     private void sendMsg(int threadId) {
         for (int i = 0; i < 500_000; i++) {
-            rabbitTemplate.convertAndSend(queueName, "Hello " + threadId + " World! " + i);
+            OrderMessageDto messageDto = new OrderMessageDto((long) i, "Hello " + threadId);
+            rabbitTemplate.convertAndSend(queueName, messageDto);
         }
     }
 }

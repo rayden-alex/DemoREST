@@ -1,12 +1,16 @@
 package com.samsolution.demo.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.Exchange;
+import org.springframework.amqp.core.ExchangeBuilder;
 import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.listener.api.RabbitListenerErrorHandler;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -15,7 +19,8 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 // @see org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration
 public class RabbitMQConfig {
-    private final static String queueName = "my_message_queue";
+    public final static String QUEUE_NAME = "my_message_queue";
+    public static final String EXCHANGE_NAME = "message_queue_exchange";
 
 //    private final RabbitTemplate rabbitTemplate;
 //
@@ -27,17 +32,29 @@ public class RabbitMQConfig {
     // is automatically used to declare a corresponding queue on the RabbitMQ instance.
     @Bean
     Queue queue() {
-        return new Queue(queueName, true);
+        // return new Queue(QUEUE_NAME, true);
+        return QueueBuilder
+                .durable(QUEUE_NAME)
+                .build();
     }
 
     @Bean
-    TopicExchange exchange() {
-        return new TopicExchange("message_queue_exchange");
+    Exchange exchange() {
+        //return new TopicExchange("message_queue_exchange");
+        return ExchangeBuilder
+                .topicExchange(EXCHANGE_NAME)
+                .durable(true)
+                .build();
     }
 
     @Bean
-    Binding binding(Queue queue, TopicExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with(queueName);
+    Binding binding(Queue queue, Exchange exchange) {
+        //return BindingBuilder.bind(queue).to(exchange).with(QUEUE_NAME);
+        return BindingBuilder
+                .bind(queue)
+                .to(exchange)
+                .with(QUEUE_NAME)
+                .noargs();
     }
 
 //    @Bean
@@ -57,7 +74,7 @@ public class RabbitMQConfig {
 //        //SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
 //
 //        container.setConnectionFactory(connectionFactory);
-//        container.setQueueNames(queueName);
+//        container.setQueueNames(QUEUE_NAME);
 //    //    container.setMessageListener(listenerAdapter);
 //
 //        return container;
@@ -96,4 +113,16 @@ public class RabbitMQConfig {
         return handler;
     }
 
+    // To send a message to RabbitMQ, the message payload has to be converted into a byte[].
+    // For a String that is pretty easy by calling String.getBytes().
+    // By default it uses the SimpleMessageConverter, which check if the object is Serializable and if so
+    // will use Java serialization to convert the object to a byte[].
+    // There are, however, various implementations that use XML
+    // (MarshallingMessageConverter) or JSON (Jackson2JsonMessageConverter) for the
+    // actual payload (instead of Java serialization).
+    @Bean
+    public Jackson2JsonMessageConverter messageConverter(ObjectMapper objectMapper) {
+        Jackson2JsonMessageConverter converter = new Jackson2JsonMessageConverter(objectMapper);
+        return converter;
+    }
 }

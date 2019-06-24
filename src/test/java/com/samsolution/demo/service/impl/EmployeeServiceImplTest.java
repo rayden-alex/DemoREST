@@ -62,4 +62,10 @@ public class EmployeeServiceImplTest {
         List<EmployeeDto> employees = service.findAllEmployeesWithStream();
         assertThat(employees).hasSize(EXPECTED_EMPLOYEES_COUNT);
     }
+
+    @Test
+    public void findAllEmployees() {
+        List<EmployeeDto> employees = service.findAllEmployees();
+        assertThat(employees).hasSize(EXPECTED_EMPLOYEES_COUNT);
+    }
 }
