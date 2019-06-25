@@ -17,13 +17,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.task.TaskExecutionAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.MockMvcSecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -45,6 +44,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(
         controllers = {EmployeeController.class},
         excludeAutoConfiguration = {MockMvcSecurityAutoConfiguration.class, TaskExecutionAutoConfiguration.class})
+
+@ContextConfiguration(classes = {BaseIntegrationTestConfiguration.class})
 public class EmployeeControllerTest2 {
 
     @Autowired
@@ -71,13 +72,6 @@ public class EmployeeControllerTest2 {
     private JacksonTester<List<EmployeeDto>> testerEmployeeDtoList;
 
     private final String RESOURCE_URL = "/employees";
-
-    // Simple @Configuration classes are excluded from scanning in test ApplicationContext,
-    // so we have to use @TestConfiguration
-    @TestConfiguration
-    @Import({BaseIntegrationTestConfiguration.class})
-    static class TestConfig {
-    }
 
     @Before
     public void setUp() {

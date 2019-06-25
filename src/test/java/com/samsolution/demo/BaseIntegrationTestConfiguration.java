@@ -12,6 +12,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// Simple @Configuration classes are excluded from scanning in test ApplicationContext,
+// so we have to use @TestConfiguration
 @TestConfiguration
 public class BaseIntegrationTestConfiguration {
     @Autowired
