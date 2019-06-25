@@ -8,7 +8,7 @@
 
 
     <appender name="FILE-HIBERNATE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>log/hibernate.log</file>
+        <file>log/hibernate-test.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>
                 ${FILE_LOG_PATTERN}
@@ -16,7 +16,7 @@
         </encoder>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>log/hibernate.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+            <fileNamePattern>log/hibernate-test.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
             <maxFileSize>10MB</maxFileSize>
             <maxHistory>5</maxHistory>
         </rollingPolicy>
@@ -28,6 +28,28 @@
 
     <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE" additivity="false">
         <appender-ref ref="FILE-HIBERNATE"/>
+    </logger>
+
+
+
+
+    <appender name="FILE-SPRING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>log/spring-test.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>
+                ${FILE_LOG_PATTERN}
+            </pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>log/spring-test.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>5</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <logger name="org.springframework.test.context.cache" level="DEBUG" additivity="false">
+        <appender-ref ref="FILE-SPRING"/>
     </logger>
 
 </configuration>
