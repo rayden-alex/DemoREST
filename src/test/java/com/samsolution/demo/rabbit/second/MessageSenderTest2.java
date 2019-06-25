@@ -1,8 +1,8 @@
 package com.samsolution.demo.rabbit.second;
 
-import com.samsolution.demo.BaseIntegrationTestConfiguration;
 import com.samsolution.demo.config.RabbitMQConfig;
 import com.samsolution.demo.dto.OrderMessageDto;
+import com.samsolution.demo.rabbit.RabbitMessageSenderTestConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.amqp.core.Message;
@@ -13,15 +13,13 @@ import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = MessageSenderTest2.TestConfig.class)
+@SpringBootTest(classes = {RabbitMessageSenderTestConfig.class}) // or we can use "classes" in @ContextConfiguration
 
 // Prevents the search for SpringBoot config in the upper classes (i.e. in com.samsolution.demo.DemoApplication)
 @SpringBootConfiguration
@@ -31,15 +29,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class MessageSenderTest2 {
     @Autowired
     private RabbitTemplate rabbitTemplate;
-
-    // Simple @Configuration classes are excluded from scanning in test ApplicationContext,
-    // so we have to use @TestConfiguration
-    @TestConfiguration
-
-    //Create additional beans in SpringContext
-    @Import({BaseIntegrationTestConfiguration.class, RabbitMQConfig.class})
-    static class TestConfig {
-    }
 
     @Test
     public void shouldSendAtLeastASingleMessage() {

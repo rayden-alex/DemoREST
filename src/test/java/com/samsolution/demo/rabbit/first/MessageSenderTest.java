@@ -1,8 +1,7 @@
 package com.samsolution.demo.rabbit.first;
 
-import com.samsolution.demo.BaseIntegrationTestConfiguration;
-import com.samsolution.demo.config.RabbitMQConfig;
 import com.samsolution.demo.dto.OrderMessageDto;
+import com.samsolution.demo.rabbit.RabbitMessageSenderTestConfig;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,9 +21,8 @@ import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,6 +35,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 // Restricts the auto-configuration classes to the specified set
 @ImportAutoConfiguration(classes = {RabbitAutoConfiguration.class, JacksonAutoConfiguration.class})
+@ContextConfiguration(classes = {RabbitMessageSenderTestConfig.class}) // or we can use "classes" in @SpringBootTest
 public class MessageSenderTest {
     private static final String QUEUE_NAME = "test_queue";
     private static final String EXCHANGE_NAME = "test_exchange";
@@ -54,15 +53,6 @@ public class MessageSenderTest {
     private Exchange exchange;
 
     private Binding binding;
-
-    // Simple @Configuration classes are excluded from scanning in test ApplicationContext,
-    // so we have to use @TestConfiguration
-    @TestConfiguration
-
-    //Create additional beans in SpringContext
-    @Import({BaseIntegrationTestConfiguration.class, RabbitMQConfig.class})
-    static class TestConfig {
-    }
 
     @Before
     public void setUp() {
