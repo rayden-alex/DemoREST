@@ -4,13 +4,14 @@ import com.samsolution.demo.dto.OrderMessageDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
 @Component
+//@ConditionalOnBean({RabbitAutoConfiguration.class})
+@ConditionalOnProperty(value = "my.rabbit.disable", havingValue = "false", matchIfMissing = true)
 @Slf4j
 public class MessageSender {
     private final RabbitTemplate rabbitTemplate;

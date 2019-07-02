@@ -1,6 +1,7 @@
 package com.samsolution.demo.rabbit.first;
 
 import com.samsolution.demo.dto.OrderMessageDto;
+import com.samsolution.demo.rabbit.AbstractRabbitContainerTest;
 import com.samsolution.demo.rabbit.RabbitMessageSenderTestConfig;
 import org.junit.After;
 import org.junit.Before;
@@ -36,7 +37,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 // Restricts the auto-configuration classes to the specified set
 @ImportAutoConfiguration(classes = {RabbitAutoConfiguration.class, JacksonAutoConfiguration.class})
 @ContextConfiguration(classes = {RabbitMessageSenderTestConfig.class}) // or we can use "classes" in @SpringBootTest
-public class MessageSenderTest {
+public class MessageSenderTest extends AbstractRabbitContainerTest {
     private static final String QUEUE_NAME = "test_queue";
     private static final String EXCHANGE_NAME = "test_exchange";
 
@@ -74,6 +75,11 @@ public class MessageSenderTest {
         amqpAdmin.removeBinding(binding);
         amqpAdmin.deleteExchange(EXCHANGE_NAME);
         amqpAdmin.deleteQueue(QUEUE_NAME);
+    }
+
+    @Test
+    public void shouldGettingUpContainer() {
+        assertThat(RABBIT_MQ_CONTAINER.isRunning()).isTrue();
     }
 
     @Test

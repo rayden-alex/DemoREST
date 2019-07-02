@@ -11,11 +11,13 @@ import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.listener.api.RabbitListenerErrorHandler;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableRabbit
+@ConditionalOnProperty(value = "my.rabbit.disable", havingValue = "false", matchIfMissing = true)
 @Slf4j
 // @see org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration
 public class RabbitMQConfig {

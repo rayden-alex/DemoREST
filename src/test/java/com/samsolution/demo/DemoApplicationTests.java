@@ -6,7 +6,7 @@ import org.junit.runner.RunWith;
 import org.springframework.amqp.rabbit.annotation.RabbitBootstrapConfiguration;
 import org.springframework.amqp.rabbit.listener.RabbitListenerEndpointRegistry;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
@@ -18,7 +18,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 // тестовых контекстах. И если эти бины имели коннекты к внешним системам
 // не через DispatcherServlet и прочие спринговые плюшки, то эти коннекты тоже будут "живыми".
 // И, соответственно, продолжат обрабатывать запросы через эти коннекты.
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+// Чтобы остановить RabbitListener-ы нужно удалить их из закешированного контекста:
+// @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+
+// Или вообще не поднимать бины связанные с Rabbit при запуске основной массы тестов,
+// а запускать их только тогда когда это действительно нужно. Типа аналог slice-test.
+@TestPropertySource(properties = "my.rabbit.disable=true")
 public class DemoApplicationTests {
     @Test
     public void contextLoads() {

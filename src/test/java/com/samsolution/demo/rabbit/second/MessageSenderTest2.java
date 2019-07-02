@@ -2,6 +2,7 @@ package com.samsolution.demo.rabbit.second;
 
 import com.samsolution.demo.config.RabbitMQConfig;
 import com.samsolution.demo.dto.OrderMessageDto;
+import com.samsolution.demo.rabbit.AbstractRabbitContainerTest;
 import com.samsolution.demo.rabbit.RabbitMessageSenderTestConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,6 +15,7 @@ import org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,9 +28,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 // Restricts the auto-configuration classes to the specified set
 @ImportAutoConfiguration(classes = {RabbitAutoConfiguration.class, JacksonAutoConfiguration.class})
-public class MessageSenderTest2 {
+//@ContextConfiguration(classes = {RabbitMessageSenderTestConfig.class})
+public class MessageSenderTest2 extends AbstractRabbitContainerTest {
     @Autowired
     private RabbitTemplate rabbitTemplate;
+
+    @Test
+    public void shouldGettingUpContainer() {
+        assertThat(RABBIT_MQ_CONTAINER.isRunning()).isTrue();
+    }
 
     @Test
     public void shouldSendAtLeastASingleMessage() {
